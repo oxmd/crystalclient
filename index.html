@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Crystal Client — a free Minecraft client for Minecraft 1.21.11.">
+  <title>Crystal Client — Minecraft 1.21.11</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #08030f;
+      --bg2: #10051d;
+      --purple: #9b4dff;
+      --purple2: #6d28d9;
+      --text: #f8f5ff;
+      --muted: #a9a0b8;
+      --card: rgba(255,255,255,.045);
+      --border: rgba(190,120,255,.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 50% 5%, rgba(130,45,255,.22), transparent 32rem),
+        radial-gradient(circle at 85% 55%, rgba(91,28,175,.12), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(190,120,255,.35) 1px, transparent 1px);
+      background-size: 90px 90px;
+      opacity: .16;
+      mask-image: linear-gradient(to bottom, black, transparent 75%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1120px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(8,3,15,.72);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .nav-inner {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 800;
+      letter-spacing: -.03em;
+    }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 12px rgba(155,77,255,.8));
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .links a:hover { color: white; }
+
+    .nav-button {
+      padding: 11px 17px;
+      border: 1px solid rgba(177,104,255,.35);
+      border-radius: 10px;
+      background: rgba(155,77,255,.12);
+      color: white !important;
+    }
+
+    section { padding: 110px 0; }
+
+    .hero {
+      min-height: 760px;
+      padding-top: 150px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .logo {
+      width: 145px;
+      height: 145px;
+      object-fit: contain;
+      margin-bottom: 28px;
+      filter:
+        drop-shadow(0 0 16px rgba(155,77,255,.9))
+        drop-shadow(0 0 55px rgba(122,35,255,.45));
+      animation: float 5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 8px 13px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(155,77,255,.08);
+      color: #d9baff;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: clamp(55px, 10vw, 105px);
+      line-height: .9;
+      letter-spacing: -.075em;
+      font-weight: 800;
+      background: linear-gradient(180deg, #fff 20%, #d6aaff 55%, #8b35ed);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 60px rgba(143,54,255,.25);
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 28px auto 34px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      transition: .2s ease;
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, #a855f7, #6d28d9);
+      box-shadow: 0 10px 35px rgba(124,58,237,.35);
+    }
+
+    .button.secondary {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    .section-head {
+      max-width: 650px;
+      margin-bottom: 45px;
+    }
+
+    .eyebrow {
+      color: #b979ff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(32px, 5vw, 55px);
+      letter-spacing: -.05em;
+      margin-bottom: 14px;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      padding: 27px;
+      min-height: 185px;
+      border: 1px solid var(--border);
+      background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+      border-radius: 18px;
+      transition: .25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(181,106,255,.4);
+      box-shadow: 0 18px 50px rgba(77,25,125,.18);
+    }
+
+    .icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(155,77,255,.13);
+      color: #d3a1ff;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    .card h3 {
+      font-size: 16px;
+      margin-bottom: 9px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .version {
+      text-align: center;
+      padding: 100px 30px;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(155,77,255,.18), transparent 55%),
+        rgba(255,255,255,.025);
+      box-shadow: inset 0 1px rgba(255,255,255,.04);
+    }
+
+    .version h2 { margin-bottom: 10px; }
+
+    .version p {
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .free {
+      color: #d9b5ff;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      letter-spacing: .08em;
+    }
+
+    footer {
+      padding: 35px 0;
+      border-top: 1px solid rgba(255,255,255,.06);
+      color: #81778e;
+      font-size: 12px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a:hover { color: white; }
+
+    @media (max-width: 800px) {
+      .links a:not(.nav-button) { display: none; }
+      .features { grid-template-columns: 1fr; }
+      .hero { min-height: 680px; }
+      section { padding: 80px 0; }
+      .footer-inner { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <img src="crystal.png" alt="Crystal Client logo">
+        <span>CRYSTAL</span>
+      </a>
+
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="https://discord.gg/ECuenFhEar" target="_blank" class="nav-button">Discord</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="hero">
+      <div class="container hero-content">
+        <img class="logo" src="crystal.png" alt="Crystal Client">
+
+        <div class="badge">FREE • MINECRAFT 1.21.11</div>
+
+        <h1>CRYSTAL CLIENT</h1>
+
+        <p>
+          A modern, lightweight Minecraft client built for Minecraft Java Edition 1.21.11.
+          Customize your experience with a clean interface and useful features.
+        </p>
+
+        <div class="buttons">
+          <a class="button primary" href="https://discord.gg/ECuenFhEar" target="_blank">
+            Get Crystal Client
+          </a>
+          <a class="button secondary" href="#features">
+            Explore Features
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Crystal Client</div>
+          <h2>Everything you need.</h2>
+          <p>
+            Designed around a simple idea: useful features, a clean experience
+            and no unnecessary clutter.
+          </p>
+        </div>
+
+        <div class="features">
+          <article class="card">
+            <div class="icon">✦</div>
+            <h3>Performance</h3>
+            <p>Keep your Minecraft experience smooth and responsive with a lightweight design.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">◇</div>
+            <h3>Custom HUD</h3>
+            <p>Organize your on-screen information and keep the interface exactly how you like it.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">◈</div>
+            <h3>Visual Enhancements</h3>
+            <p>Clean visual improvements designed to fit naturally into your Minecraft experience.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">⚙</div>
+            <h3>Configurable</h3>
+            <p>Customize available features and settings to match your preferred playstyle.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">⌁</div>
+            <h3>Quality of Life</h3>
+            <p>Useful tools focused on making everyday gameplay more convenient.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">∞</div>
+            <h3>Completely Free</h3>
+            <p>No subscription and no pricing tiers. Crystal Client is available for free.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="download">
+      <div class="container">
+        <div class="version">
+          <div class="eyebrow">Download</div>
+          <h2>Ready for Minecraft 1.21.11</h2>
+          <p>Join the Crystal community to get the latest release and updates.</p>
+          <div class="free">100% FREE</div>
+
+          <a class="button primary" href="https://discord.gg/ECuenFhEar" target="_blank">
+            Get Crystal Client on Discord
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container" style="text-align:center; max-width:700px;">
+        <div class="eyebrow">Community</div>
+        <h2>Join the Crystal Community</h2>
+        <p style="color:var(--muted); line-height:1.7; margin:0 auto 28px;">
+          Get releases, updates, support and news about Crystal Client directly
+          from the community.
+        </p>
+        <a class="button primary" href="https://discord.gg/ECuenFhEar" target="_blank">
+          Join Discord
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2026 Crystal Client. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="https://discord.gg/ECuenFhEar" target="_blank">Discord</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
